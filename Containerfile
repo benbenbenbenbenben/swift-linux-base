@@ -1,5 +1,5 @@
 ARG ARCH=
-FROM ${ARCH}ubuntu:24.04
+FROM ${ARCH}ubuntu:24.04 AS base
 
 # Install required system dependencies
 RUN apt-get update && apt-get install -y \
@@ -36,3 +36,11 @@ ENV SWIFTLY_HOME_DIR="$HOME/.local/share/swiftly"
 ENV PATH="$PATH:$SWIFTLY_HOME_DIR/bin"
 
 RUN echo 'if [ -f /etc/bash_completion ] && ! shopt -oq posix; then\n    . /etc/bash_completion\nfi' >> /root/.bashrc
+
+FROM base AS nodejs
+
+# Node.js setup
+RUN curl -sL https://deb.nodesource.com/setup_23.x | bash -
+RUN apt-get update && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/*
