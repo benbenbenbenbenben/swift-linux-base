@@ -1,4 +1,5 @@
-FROM ubuntu:24.04
+ARG ARCH=
+FROM ${ARCH}ubuntu:24.04
 
 # Install required system dependencies
 RUN apt-get update && apt-get install -y \
