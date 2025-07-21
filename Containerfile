@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     # tzdata \ # swift says it wants this, but I'm not sure it needs it...
     zlib1g-dev \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 RUN curl -O https://download.swift.org/swiftly/linux/swiftly-$(uname -m).tar.gz && \
@@ -33,3 +34,5 @@ RUN ./swiftly init --quiet-shell-followup --assume-yes
 ENV HOME="/root"
 ENV SWIFTLY_HOME_DIR="$HOME/.local/share/swiftly"
 ENV PATH="$PATH:$SWIFTLY_HOME_DIR/bin"
+
+RUN echo 'if [ -f /etc/bash_completion ] && ! shopt -oq posix; then\n    . /etc/bash_completion\nfi' >> /root/.bashrc
