@@ -5,6 +5,7 @@ FROM ${ARCH}ubuntu:24.04 AS base
 RUN apt-get update && apt-get install -y \
     libsodium-dev \
     libssl-dev \
+    wget \
     curl \
     gpg \
     binutils \
@@ -26,21 +27,17 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl -O https://download.swift.org/swiftly/linux/swiftly-$(uname -m).tar.gz && \
-    tar zxf swiftly-$(uname -m).tar.gz
+RUN wget https://download.swift.org/swift-6.1.2-release/ubuntu2404/swift-6.1.2-RELEASE/swift-6.1.2-RELEASE-ubuntu24.04.tar.gz && \
+    tar -xzf swift-6.1.2-RELEASE-ubuntu24.04.tar.gz -C /usr/local/ && \
+    rm swift-6.1.2-RELEASE-ubuntu24.04.tar.gz
 
-RUN ./swiftly init --quiet-shell-followup --assume-yes
-
-ENV HOME="/root"
-ENV SWIFTLY_HOME_DIR="$HOME/.local/share/swiftly"
-ENV PATH="$PATH:$SWIFTLY_HOME_DIR/bin"
+# Set environment variables for Swift
+ENV SWIFT_HOME="/usr/local/swift"
+ENV PATH="$PATH:$SWIFT_HOME/bin"
 
 RUN echo 'if [ -f /etc/bash_completion ] && ! shopt -oq posix; then\n    . /etc/bash_completion\nfi' >> /root/.bashrc
 
-FROM base AS nodejs
+FROM base AS node23
 
-# Node.js setup
-RUN curl -sL https://deb.nodesource.com/setup_23.x | bash -
-RUN apt-get update && \
-    apt-get install -y nodejs && \
-    rm -rf /var/lib/apt/lists/*
+RUN curl -sL https://deb.nodesource.com/setup_23.x | bash
+RUN apt-get update && apt-get install -y nodejs && rm -rf /var/lib/apt/lists/*
