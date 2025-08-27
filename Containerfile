@@ -32,7 +32,7 @@ RUN wget https://download.swift.org/swift-6.1.2-release/ubuntu2404/swift-6.1.2-R
     rm swift-6.1.2-RELEASE-ubuntu24.04.tar.gz
 
 # Set environment variables for Swift
-ENV SWIFT_HOME="/usr/local/swift"
+ENV SWIFT_HOME="/usr/local/swift-6.1.2-RELEASE-ubuntu24.04/usr"
 ENV PATH="$PATH:$SWIFT_HOME/bin"
 
 RUN echo 'if [ -f /etc/bash_completion ] && ! shopt -oq posix; then\n    . /etc/bash_completion\nfi' >> /root/.bashrc
